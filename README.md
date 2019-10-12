@@ -1,4 +1,4 @@
-#Project template for [greencko Drupal Distribution](https://github.com/metalbote/greencko)
+#Project template for [greencko Drupal Distribution](https://gitlab.com/metalbote/greencko)
 
 This project template should provide a kickstart for managing your site
 dependencies with [Composer](https://getcomposer.org/).
