@@ -1,0 +1,193 @@
+{
+  "name": "metalbote/greencko-project",
+  "description": "Project template for Drupal 8 sites built with the my own greencko profile.",
+  "type": "project",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "Jörg Riemenschneider",
+      "email": "info@joergriemenschneider.de",
+      "homepage": "https://www.joergriemenschneider.de",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://gitlab.com/metalbote/greencko-project/issues",
+    "source": "https://gitlab.com/metalbote/greencko-project.git"
+  },
+  "repositories": {
+    "drupal": {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    },
+    "assets": {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    },
+    "composer-patches": {
+      "type": "vcs",
+      "url": "https://github.com/vardot/composer-patches"
+    },
+    "antennaio": {
+      "type": "package",
+      "package": {
+        "name": "antennaio/jquery-bar-rating",
+        "version": "1.2.2",
+        "type": "drupal-library",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/antennaio/jquery-bar-rating/archive/v1.2.2.zip"
+        }
+      }
+    },
+    "metalbote/greencko": {
+      "type": "vcs",
+      "url": "https://gitlab.com/metalbote/greencko.git"
+    }
+  },
+  "require": {
+    "composer/installers": "^1.5",
+    "oomphinc/composer-installers-extender": "^1.1",
+    "cweagans/composer-patches": "^1.6.4",
+    "drupal-composer/drupal-scaffold": "^2.5",
+    "drupal/drupal-library-installer-plugin": "^0.3",
+    "webflo/drupal-finder": "^1.2",
+    "webmozart/path-util": "^2.3",
+    "vlucas/phpdotenv": "^2.4",
+    "metalbote/greencko": "8.1.x-dev"
+  },
+  "config": {
+    "bin-dir": "private/bin",
+    "secure-http": false,
+    "optimize-autoloader": true,
+    "vendor-dir": "private/vendor",
+    "process-timeout": 0,
+    "preferred-install": {
+      "drupal/core": "dist"
+    }
+  },
+  "autoload": {
+    "files": [
+      "load.environment.php"
+    ]
+  },
+
+  "scripts": {
+    "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+    "post-install-cmd": [
+      "Greencko\\Composer\\ScriptHandler::createRequiredFiles",
+      "@composer drupal-scaffold"
+    ],
+    "post-update-cmd": [
+      "Greencko\\Composer\\ScriptHandler::createRequiredFiles"
+    ],
+    "post-drupal-scaffold-cmd": [
+      "Greencko\\Composer\\ScriptHandler::postDrupalScaffoldProcedure",
+      "Greencko\\Composer\\ScriptHandler::postDrupalScaffoldSubProfileProcedure"
+    ],
+    "clean-dev": [
+      "Greencko\\Composer\\ScriptHandler::removeGitDirectories"
+    ]
+  },
+  "conflict": {
+    "drupal/drupal": "*"
+  },
+  "extra": {
+    "_readme": [
+      "NOTICE: We're now using composer patches from Vardot repository to suggest",
+      "several fixes and better handling of patches in your Drupal project.",
+      "You'll notice that we have included (https://github.com/vardot/composer-patches)",
+      "in this composer.json repositories. This will replace the original",
+      "library (cweagans/composer-patches) with our own from (vardot/composer-patches).",
+      "See https://github.com/cweagans/composer-patches/pull/243 and more details",
+      "on our changes on the composer-patches package. Once our changes get merged,",
+      "we will revert to using (cweagans/composer-patches) without this override."
+    ],
+    "branch-alias": {
+      "dev-8.x-1.x": "8.1.x-dev"
+    },
+    "installer-types": [
+      "bower-asset",
+      "component",
+      "library",
+      "npm-asset"
+    ],
+    "installer-paths": {
+      "web/core": [
+        "type:drupal-core",
+        "drupal/core"
+      ],
+      "web/profiles/{$name}": [
+        "type:drupal-profile"
+      ],
+      "web/modules/contrib/{$name}": [
+        "type:drupal-module"
+      ],
+      "web/modules/custom/{$name}": [
+        "type:drupal-custom-module"
+      ],
+      "web/profiles/greencko/themes/{$name}": [
+        "greencko/greencko_ui"
+      ],
+      "web/themes/contrib/{$name}": [
+        "type:drupal-theme"
+      ],
+      "web/themes/custom/{$name}": [
+        "type:drupal-custom-theme"
+      ],
+      "web/libraries/fontawesome": [
+        "fortawesome/font-awesome"
+      ],
+      "web/libraries/slick": [
+        "npm-asset/slick-carousel"
+      ],
+      "web/libraries/ace": [
+        "npm-asset/ace-builds"
+      ],
+      "web/libraries/{$name}": [
+        "type:drupal-library",
+        "type:bower-asset",
+        "type:npm-asset"
+      ],
+      "private/drush/contrib/{$name}": [
+        "type:drupal-drush"
+      ]
+    },
+    "drupal-libraries": {
+      "library-directory": "web/libraries",
+      "libraries": [
+        {
+          "name": "dropzone",
+          "package": "npm-asset/dropzone"
+        },
+        {
+          "name": "blazy",
+          "package": "npm-asset/blazy"
+        },
+        {
+          "name": "slick",
+          "package": "npm-asset/slick-carousel"
+        },
+        {
+          "name": "ace",
+          "package": "npm-asset/ace-builds"
+        },
+        {
+          "name": "spectrum",
+          "package": "npm-asset/spectrum"
+        },
+        {
+          "name": "fontawesome",
+          "package": "npm-asset/fortawesome--fontawesome-free"
+        }
+      ]
+    },
+    "enable-patching": true,
+    "composer-exit-on-patch-failure": true,
+    "patchLevel": {
+      "drupal/core": "-p2"
+    }
+  }
+}
