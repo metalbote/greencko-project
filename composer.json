@@ -3,8 +3,6 @@
   "description": "Project template for Drupal 8 sites built with the my own greencko profile.",
   "type": "project",
   "license": "GPL-2.0-or-later",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "authors": [
     {
       "name": "Jörg Riemenschneider",
@@ -26,22 +24,6 @@
       "type": "composer",
       "url": "https://asset-packagist.org"
     },
-    "composer-patches": {
-      "type": "vcs",
-      "url": "https://github.com/vardot/composer-patches"
-    },
-    "antennaio": {
-      "type": "package",
-      "package": {
-        "name": "antennaio/jquery-bar-rating",
-        "version": "1.2.2",
-        "type": "drupal-library",
-        "dist": {
-          "type": "zip",
-          "url": "https://github.com/antennaio/jquery-bar-rating/archive/v1.2.2.zip"
-        }
-      }
-    },
     "metalbote/greencko": {
       "type": "vcs",
       "url": "https://gitlab.com/metalbote/greencko.git"
@@ -51,19 +33,22 @@
     "composer/installers": "^1.5",
     "oomphinc/composer-installers-extender": "^1.1",
     "cweagans/composer-patches": "^1.6.4",
-    "drupal-composer/drupal-scaffold": "^2.5",
+    "drupal/core-composer-scaffold": "^8.8.0",
+    "drupal/core-project-message": "^8.8.0",
     "drupal/drupal-library-installer-plugin": "^0.3",
     "webflo/drupal-finder": "^1.2",
     "webmozart/path-util": "^2.3",
     "vlucas/phpdotenv": "^2.4",
     "metalbote/greencko": "8.1.x-dev"
   },
+  "replace": {
+    "ajaxorg/ace-builds": "*"
+  },
   "config": {
     "bin-dir": "private/bin",
     "secure-http": false,
     "optimize-autoloader": true,
     "vendor-dir": "private/vendor",
-    "process-timeout": 0,
     "sort-packages": true,
     "preferred-install": {
       "drupal/core": "dist"
@@ -74,12 +59,9 @@
       "load.environment.php"
     ]
   },
-
   "scripts": {
-    "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
     "post-install-cmd": [
-      "Greencko\\Composer\\ScriptHandler::createRequiredFiles",
-      "@composer drupal-scaffold"
+      "Greencko\\Composer\\ScriptHandler::createRequiredFiles"
     ],
     "post-update-cmd": [
       "Greencko\\Composer\\ScriptHandler::createRequiredFiles"
@@ -87,25 +69,43 @@
     "post-drupal-scaffold-cmd": [
       "Greencko\\Composer\\ScriptHandler::postDrupalScaffoldProcedure",
       "Greencko\\Composer\\ScriptHandler::postDrupalScaffoldSubProfileProcedure"
-    ],
-    "clean-dev": [
-      "Greencko\\Composer\\ScriptHandler::removeGitDirectories"
     ]
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "conflict": {
     "drupal/drupal": "*"
   },
   "extra": {
-    "_readme": [
-      "NOTICE: We're now using composer patches from Vardot repository to suggest",
-      "several fixes and better handling of patches in your Drupal project.",
-      "You'll notice that we have included (https://github.com/vardot/composer-patches)",
-      "in this composer.json repositories. This will replace the original",
-      "library (cweagans/composer-patches) with our own from (vardot/composer-patches).",
-      "See https://github.com/cweagans/composer-patches/pull/243 and more details",
-      "on our changes on the composer-patches package. Once our changes get merged,",
-      "we will revert to using (cweagans/composer-patches) without this override."
-    ],
+    "drupal-scaffold": {
+      "allowed-packages": [
+        "drupal/core"
+      ],
+      "locations": {
+        "web-root": "web/"
+      }
+    },
+    "drupal-core-project-message": {
+      "include-keys": [
+        "homepage",
+        "support"
+      ],
+      "post-create-project-cmd-message": [
+        "<bg=blue;fg=white>                                                         </>",
+        "<bg=blue;fg=white>  Congratulations, you’ve installed the Greencko codebase </>",
+        "<bg=blue;fg=white>  from the metalbote/greencko-project template!              </>",
+        "<bg=blue;fg=white>                                                         </>",
+        "",
+        "<bg=yellow;fg=black>Next steps</>:",
+        "  * Install the site: https://www.drupal.org/docs/8/install",
+        "  * Read the user guide: https://docs.varbase.vardot.com",
+        "  * Get support: https://www.vardot.com/en/form/get-support-varbase",
+        "  * Join Our Slack Team for Feedback and Support:",
+        "      http://slack.varbase.vardot.com",
+        "  * Remove the plugin that prints this message:",
+        "      composer remove drupal/core-project-message"
+      ]
+    },
     "branch-alias": {
       "dev-8.x-1.x": "8.1.x-dev"
     },
@@ -117,8 +117,7 @@
     ],
     "installer-paths": {
       "web/core": [
-        "type:drupal-core",
-        "drupal/core"
+        "type:drupal-core"
       ],
       "web/profiles/{$name}": [
         "type:drupal-profile"
@@ -126,20 +125,8 @@
       "web/modules/contrib/{$name}": [
         "type:drupal-module"
       ],
-      "web/modules/custom/{$name}": [
-        "type:drupal-custom-module"
-      ],
-      "web/profiles/greencko/themes/{$name}": [
-        "greencko/greencko_ui"
-      ],
       "web/themes/contrib/{$name}": [
         "type:drupal-theme"
-      ],
-      "web/themes/custom/{$name}": [
-        "type:drupal-custom-theme"
-      ],
-      "web/libraries/fontawesome": [
-        "fortawesome/font-awesome"
       ],
       "web/libraries/slick": [
         "npm-asset/slick-carousel"
@@ -147,10 +134,22 @@
       "web/libraries/ace": [
         "npm-asset/ace-builds"
       ],
+      "web/libraries/masonry": [
+        "npm-asset/masonry-layout"
+      ],
+      "web/libraries/fontawesome": [
+        "fortawesome/font-awesome"
+      ],
       "web/libraries/{$name}": [
         "type:drupal-library",
         "type:bower-asset",
         "type:npm-asset"
+      ],
+      "web/modules/custom/{$name}": [
+        "type:drupal-custom-module"
+      ],
+      "web/themes/custom/{$name}": [
+        "type:drupal-custom-theme"
       ],
       "private/drush/contrib/{$name}": [
         "type:drupal-drush"
@@ -174,6 +173,30 @@
         {
           "name": "ace",
           "package": "npm-asset/ace-builds"
+        },
+        {
+          "name": "chartjs",
+          "package": "bower-asset/chartjs"
+        },
+        {
+          "name": "c3",
+          "package": "bower-asset/c3"
+        },
+        {
+          "name": "d3",
+          "package": "bower-asset/d3"
+        },
+        {
+          "name": "masonry",
+          "package": "npm-asset/masonry-layout"
+        },
+        {
+          "name": "imagesloaded",
+          "package": "npm-asset/imagesloaded"
+        },
+        {
+          "name": "swagger-ui",
+          "package": "swagger-api/swagger-ui"
         },
         {
           "name": "spectrum",
